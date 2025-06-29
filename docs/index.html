@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Candidate Scraper - Professional Recruitment Data Extraction Tool</title>
+    <meta name="description" content="Professional Chrome extension for extracting candidate information from LinkedIn job applicant pages and exporting to Excel format. Perfect for recruiters, HR professionals, and talent acquisition teams.">
+    <meta name="keywords" content="LinkedIn candidate scraper, recruitment tool, HR automation, talent acquisition software, Chrome extension, candidate data extraction, Excel export, privacy-focused">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ist00dent.github.io/linkedin-candidate-scraper/">
+    <meta property="og:title" content="LinkedIn Candidate Scraper - Professional Recruitment Tool">
+    <meta property="og:description" content="Professional Chrome extension for extracting candidate information from LinkedIn job applicant pages and exporting to Excel format.">
+    <meta property="og:image" content="https://ist00dent.github.io/linkedin-candidate-scraper/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ist00dent.github.io/linkedin-candidate-scraper/">
+    <meta property="twitter:title" content="LinkedIn Candidate Scraper - Professional Recruitment Tool">
+    <meta property="twitter:description" content="Professional Chrome extension for extracting candidate information from LinkedIn job applicant pages and exporting to Excel format.">
+    <meta property="twitter:image" content="https://ist00dent.github.io/linkedin-candidate-scraper/assets/og-image.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section {
+            text-align: center;
+            background: #667eea;
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .cta-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #218838;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .docs-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .doc-link {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .doc-link:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>LinkedIn Candidate Scraper</h1>
+            <p>Professional Chrome extension for extracting candidate information from LinkedIn job applicant pages and exporting to Excel format. Perfect for recruiters, HR professionals, and talent acquisition teams.</p>
+        </header>
+
+        <main class="main-content">
+            <h2>🚀 Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>📊 Automated Data Extraction</h3>
+                    <p>Extract candidate information including names, titles, companies, contact details, education, and work experience with 95% accuracy.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📈 Professional Excel Export</h3>
+                    <p>Export data to professionally formatted Excel files with clean headers, organized columns, and proper data structure.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔒 Privacy-First Design</h3>
+                    <p>All data processing happens locally on your device. No data is sent to external servers or services.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Background Processing</h3>
+                    <p>Continue scraping even when the popup is minimized. Get desktop notifications when scraping completes.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Recruitment-Focused</h3>
+                    <p>Designed specifically for recruitment professionals, HR teams, and talent acquisition specialists.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💯 Completely Free</h3>
+                    <p>Open source and completely free to use for both personal and commercial purposes under MIT License.</p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2>Ready to Streamline Your Recruitment Process?</h2>
+                <p>Join thousands of HR professionals who have already improved their candidate data collection efficiency.</p>
+                <a href="https://github.com/ist00dent/linkedin-candidate-scraper" class="btn">Download Now</a>
+                <a href="INSTALLATION.md" class="btn btn-secondary">Installation Guide</a>
+            </div>
+
+            <div class="docs-section">
+                <h2>📚 Documentation</h2>
+                <p>Comprehensive guides and resources to help you get started and make the most of LinkedIn Candidate Scraper.</p>
+                <div class="docs-grid">
+                    <a href="INSTALLATION.md" class="doc-link">📖 Installation Guide</a>
+                    <a href="USER_GUIDE.md" class="doc-link">📋 User Guide</a>
+                    <a href="FEATURES.md" class="doc-link">✨ Features</a>
+                    <a href="FAQ.md" class="doc-link">❓ FAQ</a>
+                    <a href="COMPARISON.md" class="doc-link">⚖️ Comparison</a>
+                    <a href="CONTRIBUTING.md" class="doc-link">🤝 Contributing</a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 LinkedIn Candidate Scraper. Open source project licensed under MIT License.</p>
+            <p>Built with ❤️ for the recruitment community</p>
+        </footer>
+    </div>
+</body>
+</html> 
