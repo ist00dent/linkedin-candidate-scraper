@@ -1,0 +1,56 @@
+# LinkedIn Candidate Scraper - Robots.txt
+# Professional LinkedIn candidate data extraction tool for recruiters and HR professionals
+
+User-agent: *
+Allow: /
+
+# Allow all documentation and guides
+Allow: /README.md
+Allow: /SETUP.md
+Allow: /CHANGELOG.md
+Allow: /LICENSE
+Allow: /package.json
+Allow: /manifest.json
+
+# Allow all documentation pages
+Allow: /docs/
+Allow: /docs/README.md
+Allow: /docs/FEATURES.md
+Allow: /docs/INSTALLATION.md
+Allow: /docs/USER_GUIDE.md
+Allow: /docs/FAQ.md
+Allow: /docs/COMPARISON.md
+Allow: /docs/CONTRIBUTING.md
+Allow: /docs/SITEMAP.md
+
+# Allow source code for transparency
+Allow: /src/
+Allow: /src/js/
+Allow: /src/popup.html
+
+# Allow scripts and workflows
+Allow: /scripts/
+Allow: /scripts/validate.js
+Allow: /.github/
+Allow: /.github/workflows/
+Allow: /.github/ISSUE_TEMPLATE/
+
+# Disallow sensitive or unnecessary files
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /*.log
+Disallow: /*.tmp
+Disallow: /Thumbs.db
+Disallow: /.DS_Store
+
+# Sitemap location
+Sitemap: https://github.com/ist00dent/linkedin-candidate-scraper/docs/SITEMAP.md
+
+# Crawl delay (optional - be respectful to servers)
+Crawl-delay: 1
+
+# Additional information for search engines
+# This is a professional LinkedIn candidate scraper Chrome extension
+# Designed for recruitment professionals, HR teams, and talent acquisition specialists
+# Features: automated data extraction, Excel export, privacy-focused design
+# Keywords: LinkedIn candidate scraper, recruitment tool, HR automation, talent acquisition 

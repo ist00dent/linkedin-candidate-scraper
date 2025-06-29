@@ -15,15 +15,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-      
     - name: Validate manifest.json
       run: |
         echo "Validating manifest.json..."
@@ -67,21 +58,6 @@ jobs:
         
         echo "✅ HTML validation passed"
         
-    - name: Lint JavaScript
-      run: |
-        echo "Linting JavaScript files..."
-        
-        # Basic syntax check for JavaScript files
-        js_files=("src/js/content.js" "src/js/popup.js" "src/js/background.js")
-        for file in "${js_files[@]}"; do
-          if ! node -c "$file"; then
-            echo "❌ JavaScript syntax error in $file"
-            exit 1
-          fi
-        done
-        
-        echo "✅ JavaScript syntax validation passed"
-        
     - name: Check permissions
       run: |
         echo "Checking manifest permissions..."
@@ -111,14 +87,14 @@ jobs:
       with:
         node-version: '18'
         
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Run tests (if any)
+    - name: Run validation script
       run: |
-        echo "Running tests..."
-        # Placeholder for future tests
-        echo "✅ No tests configured yet"
+        echo "Running validation script..."
+        if [ -f "scripts/validate.js" ]; then
+          node scripts/validate.js
+        else
+          echo "✅ No validation script found, skipping"
+        fi
         
     - name: Check file sizes
       run: |

@@ -37,7 +37,7 @@ We welcome feature suggestions! When suggesting a feature:
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/your-username/linkedin-candidate-scraper.git
+   git clone https://github.com/ist00dent/linkedin-candidate-scraper.git
    cd linkedin-candidate-scraper
    ```
 3. **Create a feature branch**:

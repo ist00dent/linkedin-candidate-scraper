@@ -147,7 +147,7 @@ if (hasErrors) {
   console.log('✅ All validations passed! Extension is ready.');
   console.log('\n🚀 Next steps:');
   console.log('1. Initialize git: git init');
-  console.log('2. Add remote: git remote add origin https://github.com/your-username/linkedin-candidate-scraper.git');
+  console.log('2. Add remote: git remote add origin https://github.com/ist00dent/linkedin-candidate-scraper.git');
   console.log('3. Add files: git add .');
   console.log('4. Commit: git commit -m "Initial commit"');
   console.log('5. Push: git push -u origin main');

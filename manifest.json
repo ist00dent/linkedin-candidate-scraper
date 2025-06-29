@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "LinkedIn Candidate Scraper",
+  "name": "LinkedIn Candidate Scraper - Professional Recruitment Tool",
   "version": "1.0.0",
-  "description": "Extract candidate information from LinkedIn job applicant pages and export to Excel format. Built for efficient recruitment data management.",
+  "description": "Professional Chrome extension for extracting candidate information from LinkedIn job applicant pages and exporting to Excel format. Perfect for recruiters, HR professionals, and talent acquisition teams. Features automated data collection, privacy-first design, and professional Excel export capabilities.",
   "permissions": [
     "activeTab",
     "storage",
@@ -14,7 +14,7 @@
   ],
   "action": {
     "default_popup": "src/popup.html",
-    "default_title": "LinkedIn Candidate Scraper - Extract applicant data"
+    "default_title": "LinkedIn Candidate Scraper - Extract applicant data and export to Excel"
   },
   "content_scripts": [
     {
@@ -30,5 +30,9 @@
     "16": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iMiIgZmlsbD0iIzQyZDM4NSIvPgo8cGF0aCBkPSJNNC4xIDYuNUw2LjEgOC41TDEwLjEgNC41IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K",
     "48": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0iIzQyZDM4NSIvPgo8cGF0aCBkPSJNMTggMjRMMjIgMjhMMzAgMjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=",
     "128": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiByeD0iMjAiIGZpbGw9IiM0MmQzODUiLz4KPHBhdGggZD0iTTQ4IDY0TDU2IDcyTDgwIDQ4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K"
-  }
+  },
+  "author": "LinkedIn Candidate Scraper Team",
+  "homepage_url": "https://github.com/ist00dent/linkedin-candidate-scraper",
+  "short_name": "LinkedIn Scraper",
+  "version_name": "1.0.0 Professional Edition"
 } 
