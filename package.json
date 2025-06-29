@@ -1,0 +1,41 @@
+{
+  "name": "linkedin-candidate-scraper",
+  "version": "1.0.0",
+  "description": "A Chrome extension for extracting candidate information from LinkedIn job applicant pages and exporting to Excel format",
+  "main": "src/js/content.js",
+  "scripts": {
+    "validate": "node scripts/validate.js",
+    "test": "npm run validate",
+    "build": "echo 'No build process required for Chrome extension'",
+    "dev": "echo 'Load extension in Chrome with Developer mode enabled'",
+    "ci": "npm run validate"
+  },
+  "keywords": [
+    "chrome-extension",
+    "linkedin",
+    "scraper",
+    "recruitment",
+    "excel-export",
+    "candidate-management",
+    "hr-tools",
+    "data-extraction"
+  ],
+  "author": "LinkedIn Candidate Scraper Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/linkedin-candidate-scraper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/linkedin-candidate-scraper/issues"
+  },
+  "homepage": "https://github.com/your-username/linkedin-candidate-scraper#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "browserslist": [
+    "Chrome >= 88"
+  ]
+} 

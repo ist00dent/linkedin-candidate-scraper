@@ -1,0 +1,194 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Validate Extension
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Validate manifest.json
+      run: |
+        echo "Validating manifest.json..."
+        if [ ! -f "manifest.json" ]; then
+          echo "❌ manifest.json not found"
+          exit 1
+        fi
+        
+        # Check if manifest.json is valid JSON
+        if ! python3 -m json.tool manifest.json > /dev/null 2>&1; then
+          echo "❌ manifest.json is not valid JSON"
+          exit 1
+        fi
+        
+        echo "✅ manifest.json is valid"
+        
+    - name: Check file structure
+      run: |
+        echo "Checking file structure..."
+        
+        # Check required files exist
+        required_files=("manifest.json" "src/popup.html" "src/js/content.js" "src/js/popup.js" "src/js/background.js")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Required file missing: $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All required files present"
+        
+    - name: Validate HTML
+      run: |
+        echo "Validating HTML files..."
+        
+        # Check if popup.html has required elements
+        if ! grep -q "script.*popup.js" src/popup.html; then
+          echo "❌ popup.html missing popup.js script reference"
+          exit 1
+        fi
+        
+        echo "✅ HTML validation passed"
+        
+    - name: Lint JavaScript
+      run: |
+        echo "Linting JavaScript files..."
+        
+        # Basic syntax check for JavaScript files
+        js_files=("src/js/content.js" "src/js/popup.js" "src/js/background.js")
+        for file in "${js_files[@]}"; do
+          if ! node -c "$file"; then
+            echo "❌ JavaScript syntax error in $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ JavaScript syntax validation passed"
+        
+    - name: Check permissions
+      run: |
+        echo "Checking manifest permissions..."
+        
+        # Check if required permissions are present
+        required_permissions=("activeTab" "storage" "downloads")
+        for permission in "${required_permissions[@]}"; do
+          if ! grep -q "\"$permission\"" manifest.json; then
+            echo "❌ Required permission missing: $permission"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All required permissions present"
+
+  test:
+    name: Test Extension
+    runs-on: ubuntu-latest
+    needs: validate
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests (if any)
+      run: |
+        echo "Running tests..."
+        # Placeholder for future tests
+        echo "✅ No tests configured yet"
+        
+    - name: Check file sizes
+      run: |
+        echo "Checking file sizes..."
+        
+        # Check if any file is too large
+        max_size=1024000  # 1MB
+        large_files=$(find . -type f -size +${max_size}c -not -path "./.git/*" -not -path "./node_modules/*")
+        
+        if [ -n "$large_files" ]; then
+          echo "⚠️ Large files detected:"
+          echo "$large_files"
+          echo "Consider optimizing these files"
+        else
+          echo "✅ All files are reasonably sized"
+        fi
+
+  build:
+    name: Build Extension Package
+    runs-on: ubuntu-latest
+    needs: [validate, test]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Create extension package
+      run: |
+        echo "Creating extension package..."
+        
+        # Create a clean package directory
+        mkdir -p dist
+        
+        # Copy essential files
+        cp manifest.json dist/
+        cp -r src dist/
+        cp -r docs dist/
+        cp README.md dist/
+        cp LICENSE dist/
+        cp CHANGELOG.md dist/
+        
+        # Create zip file
+        cd dist
+        zip -r ../linkedin-candidate-scraper.zip .
+        cd ..
+        
+        echo "✅ Extension package created: linkedin-candidate-scraper.zip"
+        
+    - name: Upload extension package
+      uses: actions/upload-artifact@v4
+      with:
+        name: extension-package
+        path: linkedin-candidate-scraper.zip
+        retention-days: 30
+
+  deploy:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: [validate, test, build]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        publish_branch: gh-pages 
