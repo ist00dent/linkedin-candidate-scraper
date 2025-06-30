@@ -7,7 +7,8 @@
     "activeTab",
     "storage",
     "downloads",
-    "notifications"
+    "notifications",
+    "tabs"
   ],
   "host_permissions": [
     "https://*.linkedin.com/*"
@@ -20,6 +21,13 @@
     {
       "matches": ["https://*.linkedin.com/*"],
       "js": ["src/js/xlsx.full.min.js", "src/js/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.linkedin.com/in/*"
+      ],
+      "js": ["src/js/profileScraper.js"],
       "run_at": "document_idle"
     }
   ],

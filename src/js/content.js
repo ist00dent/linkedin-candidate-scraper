@@ -65,6 +65,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+// Listen for messages in the content script (profile page)
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.action === 'scrapeProfileLocationAndConnection') {
+            const data = extractProfileLocationAndConnection();
+            sendResponse(data);
+        }
+    });
+}
+
 async function scrapeAllPages() {
     let allCandidates = [];
     let page = 1;
@@ -157,13 +167,15 @@ async function scrapeCandidates() {
     }
 }
 
-async function extractCandidateInfo(card, index) {
+async function extractCandidateInfo(card, index, page = 1) {
     const candidate = {
         id: index + 1,
+        page: page,
         name: '',
         title: '',
         company: '',
         location: '',
+        connection: '',
         profileUrl: '',
         education: '',
         experience: '',
@@ -179,18 +191,23 @@ async function extractCandidateInfo(card, index) {
         let nameElem = card.querySelector('.artdeco-entity-lockup__title, .hiring-people-card__title');
         if (nameElem) candidate.name = nameElem.textContent.trim();
         // Profile URL
-        let linkElem = card.querySelector('a[href*="/applicants/"]');
-        if (linkElem) candidate.profileUrl = linkElem.href;
+        let seeProfileBtn = card.querySelector('.hiring-profile-highlights__see-full-profile a[href*="/in/"]');
+        if (seeProfileBtn) {
+            candidate.profileUrl = seeProfileBtn.href.startsWith('http') ? seeProfileBtn.href : (window.location.origin + seeProfileBtn.getAttribute('href'));
+        }
+        // Robust: Try to get the profile URL from the main card link if not already set
+        if (!candidate.profileUrl) {
+            let mainProfileLink = card.querySelector('a[href*="/in/"]');
+            if (mainProfileLink) {
+                candidate.profileUrl = mainProfileLink.href.startsWith('http') ? mainProfileLink.href : (window.location.origin + mainProfileLink.getAttribute('href'));
+            }
+        }
         // Image
         let imgElem = card.querySelector('img');
         if (imgElem) candidate.image = imgElem.src;
         // Title (headline)
         let titleElem = card.querySelector('.artdeco-entity-lockup__metadata, .hiring-applicants__list-item .artdeco-entity-lockup__metadata');
         if (titleElem) candidate.title = titleElem.textContent.trim();
-        // Location
-        let locationElem = card.querySelectorAll('.artdeco-entity-lockup__metadata');
-        if (locationElem.length > 1) candidate.location = locationElem[1].textContent.trim();
-        else if (locationElem.length === 1) candidate.location = locationElem[0].textContent.trim();
         // Experience (list)
         let expList = card.querySelectorAll('.artdeco-entity-lockup__caption ul li, .artdeco-entity-lockup__caption li');
         if (expList.length > 0) {
@@ -248,6 +265,45 @@ async function extractCandidateInfo(card, index) {
         candidate.mustHaveQualifications = cleanText(candidate.mustHaveQualifications);
     } catch (error) {
         console.error('Error extracting candidate info:', error);
+    }
+    // Extract location from the card DOM (second .artdeco-entity-lockup__metadata)
+    let metadataElems = card.querySelectorAll('.artdeco-entity-lockup__metadata');
+    if (metadataElems.length > 1) {
+        candidate.location = metadataElems[1].textContent.trim();
+    } else if (metadataElems.length === 1) {
+        candidate.location = metadataElems[0].textContent.trim();
+    }
+    
+    // New location extraction logic based on the actual DOM structure
+    if (!candidate.location || candidate.location === '') {
+        // Try the specific selector for location
+        let locationElem = card.querySelector('.XmoKNQbeEZDnMurvyayVmxYNBFuWiY .text-body-small.inline.t-black--light.break-words');
+        if (locationElem) {
+            candidate.location = locationElem.textContent.trim();
+        } else {
+            // Fallback: try alternative selectors for location
+            const locationSelectors = [
+                '.text-body-small.inline.t-black--light.break-words',
+                '.t-black--light.break-words',
+                '.text-body-small.t-black--light',
+                '[class*="text-body-small"][class*="t-black--light"]',
+                '.artdeco-entity-lockup__metadata .t-black--light',
+                '.hiring-applicants__list-item .t-black--light'
+            ];
+            
+            for (const selector of locationSelectors) {
+                const elem = card.querySelector(selector);
+                if (elem && elem.textContent.trim()) {
+                    candidate.location = elem.textContent.trim();
+                    break;
+                }
+            }
+        }
+    }
+    // Extract profile URL from the card's <a> tag
+    let profileLink = card.closest('li.hiring-applicants__list-item')?.querySelector('a.hiring-applicants-list-item__link, a.ember-view');
+    if (profileLink) {
+        candidate.profileUrl = profileLink.href;
     }
     return candidate;
 }
@@ -310,7 +366,10 @@ function performExport(candidates) {
         console.log('[Excel Export] Preparing worksheet data...');
         const worksheetData = candidates.map(candidate => ({
             'ID': candidate.id,
+            'Page': candidate.page,
             'Name': candidate.name,
+            'Location': candidate.location,
+            'Connection': candidate.connection,
             'Title': candidate.title,
             'Company': candidate.company,
             'Education': candidate.education,
@@ -320,7 +379,8 @@ function performExport(candidates) {
             'Full Profile URL': candidate.fullProfileUrl,
             'Email': candidate.email,
             'Phone': candidate.phone,
-            'Scraped At': candidate.scrapedAt || 'N/A'
+            'Scraped Date': candidate.scrapedDate,
+            'Scraped Time': candidate.scrapedTime
         }));
         console.log('[Excel Export] Worksheet data prepared. Sample entry:', worksheetData[0]);
         
@@ -333,7 +393,10 @@ function performExport(candidates) {
         // Set column widths
         const colWidths = [
             {wch: 5},   // ID
+            {wch: 5},   // Page
             {wch: 25},  // Name
+            {wch: 25},  // Location
+            {wch: 10},  // Connection
             {wch: 30},  // Title
             {wch: 25},  // Company
             {wch: 30},  // Education
@@ -343,7 +406,8 @@ function performExport(candidates) {
             {wch: 50},  // Full Profile URL
             {wch: 30},  // Email
             {wch: 20},  // Phone
-            {wch: 15}   // Scraped At
+            {wch: 15},  // Scraped Date
+            {wch: 10}   // Scraped Time
         ];
         ws['!cols'] = colWidths;
         console.log('[Excel Export] Column widths set');
@@ -508,6 +572,7 @@ async function scrapeAllCandidatesWithDetailsAndPaginate() {
                     a.scrollIntoView({behavior: 'smooth', block: 'center'});
                     a.click();
                     await waitForElement('#hiring-detail-root', 10000);
+                    let detailRoot = document.querySelector('.artdeco-modal__content') || document.body;
                     candidate = await scrapeCandidateDetailFromModal(`page ${page} id ${idx + 1}`, lastName, true);
                     if (candidate.email) {
                         const emailMatch = candidate.email.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
@@ -642,21 +707,23 @@ function cleanPhoneNumber(phoneText) {
 
 // Update scrapeCandidateDetailFromModal for latest 2 educations/experiences, clean Application Date, and Must-Have Qualifications
 async function scrapeCandidateDetailFromModal(id, lastName = '', onlyProfileAndContact = false, candidateObj = null) {
-    const detailRoot = document.querySelector('#hiring-detail-root');
-    if (!detailRoot) throw new Error('Detail root not found');
-    for (let i = 0; i < 20; i++) {
-        await sleep(300);
-        let nameElem = detailRoot.querySelector('h1');
-        let newName = nameElem ? nameElem.childNodes[0]?.textContent.trim() || nameElem.textContent.trim() : '';
-        if (newName && newName !== lastName) break;
-        let spinner = detailRoot.querySelector('.artdeco-spinner, .loading, .jobs-details-loader');
-        if (!spinner && newName) break;
+    // Define detailRoot as the modal/profile root element
+    let detailRoot = document.querySelector('.artdeco-modal__content') || document.body;
+    // Parse id and page from id string
+    let pageNum = 1, idNum = 1;
+    const idMatch = /page (\d+) id (\d+)/i.exec(id);
+    if (idMatch) {
+        pageNum = parseInt(idMatch[1], 10);
+        idNum = parseInt(idMatch[2], 10);
     }
     let candidate = candidateObj || {
-        id,
+        id: idNum,
+        page: pageNum,
         name: '',
         title: '',
         company: '',
+        location: '',
+        connection: '',
         education: '',
         experience: '',
         applicationDate: '',
@@ -664,21 +731,20 @@ async function scrapeCandidateDetailFromModal(id, lastName = '', onlyProfileAndC
         fullProfileUrl: '',
         email: '',
         phone: '',
-        scrapedAt: ''
+        scrapedDate: '',
+        scrapedTime: ''
     };
     
     // Add timestamp when scraping this candidate
-    function getCurrentTimeString() {
+    function getCurrentDateTime() {
         const now = new Date();
-        let hours = now.getHours();
-        const minutes = now.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-        return `${hours}:${minutesStr} ${ampm}`;
+        const date = now.toISOString().split('T')[0];
+        const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        return { date, time };
     }
-    candidate.scrapedAt = getCurrentTimeString();
+    const { date, time } = getCurrentDateTime();
+    candidate.scrapedDate = date;
+    candidate.scrapedTime = time;
     
     try {
         let moreBtn = Array.from(detailRoot.querySelectorAll('button.artdeco-dropdown__trigger')).find(btn => /more…/i.test(btn.textContent));
@@ -718,7 +784,8 @@ async function scrapeCandidateDetailFromModal(id, lastName = '', onlyProfileAndC
         let nameElem = detailRoot.querySelector('h1');
         if (nameElem) {
             let rawName = nameElem.childNodes[0]?.textContent.trim() || nameElem.textContent.trim();
-            let cleanName = rawName.split(/[']/)[0].trim();
+            // Remove anything after '’' or 'application' or 'degree connection'
+            let cleanName = rawName.split('’')[0].split('application')[0].split('degree connection')[0].trim();
             candidate.name = cleanText(cleanName);
         }
         let titleElem = detailRoot.querySelector('h1 + div .t-16');
@@ -801,10 +868,84 @@ async function scrapeCandidateDetailFromModal(id, lastName = '', onlyProfileAndC
         candidate.email = cleanText(candidate.email);
         candidate.phone = cleanPhoneNumber(candidate.phone);
         
-        console.log(`[Scraper] Candidate ${candidate.id} scraped at ${candidate.scrapedAt}:`, candidate.name);
+        console.log(`[Scraper] Candidate ${candidate.id} scraped at ${candidate.scrapedDate} ${candidate.scrapedTime}:`, candidate.name);
+        
+        // After scraping all main info, only open profile tab if location or connection is missing
+        if ((candidate.location === '' || candidate.connection === '') && candidate.fullProfileUrl && typeof chrome !== 'undefined' && chrome.runtime) {
+            console.log('[Scraper] Location or connection missing, requesting background to open fullProfileUrl tab for:', candidate.fullProfileUrl);
+            // Ask background to open the profile and scrape location/connection
+            return new Promise((resolve) => {
+                chrome.runtime.sendMessage({
+                    action: 'scrapeProfileLocationAndConnectionFromTab',
+                    url: candidate.fullProfileUrl
+                }, function(response) {
+                    if (response && response.success && response.data) {
+                        console.log('[Scraper] Received profile data:', response.data);
+                        if (candidate.location === '') candidate.location = response.data.location;
+                        if (candidate.connection === '') candidate.connection = response.data.connection;
+                    } else {
+                        console.warn('[Scraper] Failed to get profile data for', candidate.fullProfileUrl, response);
+                    }
+                    resolve(candidate);
+                });
+            });
+        } else {
+            if (candidate.location && candidate.connection) {
+                console.log('[Scraper] Location and connection already present, no need to open profile tab.');
+            } else {
+                console.warn('[Scraper] No fullProfileUrl or chrome.runtime not available for', candidate);
+            }
+        }
         
     } catch (error) {
         console.error('Error extracting candidate detail info:', error);
     }
     return candidate;
+}
+
+// Update extractConnectionFromProfileDOM to use the correct selector
+function extractConnectionFromProfileDOM() {
+    // Try to find the connection badge in the profile modal
+    let badge = document.querySelector('.artdeco-entity-lockup__badge .a11y-text');
+    if (badge && /([0-9]+)[a-z]{2} degree connection/i.test(badge.textContent)) {
+        let match = badge.textContent.match(/([0-9]+)[a-z]{2} degree connection/i);
+        return match ? match[1] : '';
+    }
+    // Fallback: try to find the degree in the .artdeco-entity-lockup__degree
+    let degree = document.querySelector('.artdeco-entity-lockup__degree');
+    if (degree && /([0-9]+)[a-z]{2}/i.test(degree.textContent)) {
+        let match = degree.textContent.match(/([0-9]+)[a-z]{2}/i);
+        return match ? match[1] : '';
+    }
+    return '';
+}
+
+// In the content script for the profile page, robustly extract location and connection
+function extractProfileLocationAndConnection() {
+    // Location
+    let location = '';
+    const locationSpans = Array.from(document.querySelectorAll('span.text-body-small.inline.t-black--light.break-words'));
+    for (const span of locationSpans) {
+        const text = span.textContent.trim();
+        // Heuristic: location is usually not empty, not an email, not a phone, not a button
+        if (text && text.length > 2 && !text.match(/@|\d{3,}/)) {
+            location = text;
+            break;
+        }
+    }
+
+    // Connection
+    let connection = '';
+    const connectionLis = Array.from(document.querySelectorAll('li.text-body-small'));
+    for (const li of connectionLis) {
+        if (li.textContent.toLowerCase().includes('connections')) {
+            const bold = li.querySelector('span.t-bold');
+            if (bold) {
+                connection = bold.textContent.trim().replace('+', '');
+            }
+            break;
+        }
+    }
+
+    return { location, connection };
 } 

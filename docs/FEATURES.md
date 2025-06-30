@@ -14,6 +14,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Company Information**: Current employer and company details
 - **Location Data**: City, state, country, and geographic information
 - **Profile Summary**: Professional summary and bio information
+- **Connection Count**: LinkedIn connection numbers with smart extraction
 
 ### Contact Information
 - **Phone Number Extraction**: Clean and formatted phone numbers
@@ -51,12 +52,21 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Popup Interface**: User-friendly control panel
 - **Permission Management**: Minimal required permissions
 
+### Enhanced Profile Scraper (v1.1.0)
+- **Comprehensive Logging System**: Detailed extraction logs with timestamps
+- **Connection Extraction Prioritization**: Scraper prioritizes connection data over location
+- **Smart Content Loading Detection**: Waits for dynamic content to load before extraction
+- **Multiple Extraction Strategies**: Robust fallback system for data extraction
+- **Advanced Debugging**: Detailed DOM inspection and element analysis
+- **Real-time Logging**: All extraction steps logged and returned in response
+
 ### Data Processing Capabilities
 - **Real-time Extraction**: Live data collection from LinkedIn pages
 - **Data Validation**: Automatic verification of extracted information
 - **Error Handling**: Robust error recovery and retry mechanisms
 - **Data Cleaning**: Automatic formatting and standardization
 - **Duplicate Detection**: Identification and handling of duplicate entries
+- **Log Collection System**: Centralized logging with timestamp tracking
 
 ### Export and Output Features
 - **Excel Export**: Professional Excel file generation
@@ -64,6 +74,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Header Management**: Professional column headers and labels
 - **Data Organization**: Logical grouping and categorization
 - **Timestamp Tracking**: Individual timestamps for each candidate
+- **JSON Response Enhancement**: Logs included in background script responses
 
 ## 🔒 Privacy and Security Features
 
@@ -89,6 +100,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Speed Optimization**: Fast data extraction and processing
 - **Resource Management**: Minimal system resource consumption
 - **Batch Processing**: Handle multiple candidates efficiently
+- **Content Loading Detection**: Intelligent waiting for dynamic content
 
 ### User Experience Features
 - **Real-time Progress**: Visual progress indicators and status updates
@@ -96,6 +108,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Data Persistence**: Automatic saving and restoration of progress
 - **Error Recovery**: Graceful handling of errors and interruptions
 - **User Feedback**: Clear status messages and progress updates
+- **Advanced Debugging**: Detailed extraction logs for troubleshooting
 
 ## 🎨 User Interface Features
 
@@ -121,6 +134,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Field Mapping**: Customize field names and organization
 - **Data Filtering**: Filter and sort extracted information
 - **Export Customization**: Customize Excel export format
+- **Multiple Selector Strategies**: Robust fallback system for data extraction
 
 ### Styling Options
 - **Theme Support**: Light and dark theme options
@@ -137,6 +151,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Processing Reports**: Detailed processing and extraction reports
 - **Error Analytics**: Error tracking and analysis
 - **Performance Metrics**: Speed and efficiency measurements
+- **DOM Analysis**: Detailed inspection of page elements and structure
 
 ### Export Options
 - **Excel Format**: Professional Excel spreadsheet export
@@ -144,6 +159,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **JSON Format**: Structured data export for integration
 - **Custom Formats**: User-defined export formats
 - **Batch Export**: Export multiple datasets simultaneously
+- **Log Export**: Comprehensive extraction logs for debugging
 
 ## 🔄 Integration Features
 
@@ -176,6 +192,7 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 - **Duplicate Prevention**: Smart duplicate detection and handling
 - **Quality Scoring**: Data quality assessment and scoring
 - **Recommendation Engine**: Smart recommendations for data extraction
+- **Connection Prioritization**: Smart prioritization of connection data extraction
 
 ## 📱 Accessibility Features
 
@@ -198,18 +215,35 @@ The LinkedIn Candidate Scraper is a comprehensive Chrome extension that transfor
 ### Planned Enhancements
 - **AI-Powered Extraction**: Machine learning enhanced data extraction
 - **Advanced Analytics**: Comprehensive analytics and insights
-- **Team Collaboration**: Multi-user and team features
-- **Cloud Integration**: Cloud storage and synchronization
-- **Mobile Support**: Mobile app and responsive design
+- **Multi-Platform Support**: Firefox and Safari extensions
+- **API Integration**: Connect with ATS and HR systems
+- **Custom Export Formats**: Additional export format options
 
-### Enterprise Features
-- **API Access**: RESTful API for enterprise integration
-- **Custom Branding**: White-label and custom branding options
-- **Advanced Security**: Enterprise-grade security features
-- **Compliance Tools**: Built-in compliance and audit features
-- **Scalability**: Enterprise-scale performance and capacity
+### Performance Improvements
+- **Faster Scraping**: Optimized data extraction algorithms
+- **Memory Optimization**: Reduced resource usage
+- **Enhanced Error Recovery**: Improved error handling and recovery
+- **User Experience**: Enhanced UI/UX and accessibility
+
+## 🆕 Latest Updates (v1.1.0)
+
+### Enhanced Profile Scraper
+- **Comprehensive Logging**: Detailed extraction logs with timestamps
+- **Connection Prioritization**: Scraper now prioritizes connection data extraction
+- **Smart Content Detection**: Waits for dynamic content to load before extraction
+- **Multiple Strategies**: Robust fallback system for data extraction
+- **Advanced Debugging**: Detailed DOM inspection and element analysis
+
+### Technical Improvements
+- **Log Collection System**: Centralized logging with timestamp tracking
+- **JSON Response Enhancement**: Logs included in background script responses
+- **DOM Analysis**: Detailed inspection of page elements and structure
+- **Content Loading Detection**: Intelligent waiting for dynamic content
+- **Multiple Selector Strategies**: Robust fallback system for data extraction
 
 ---
+
+*LinkedIn Candidate Scraper continues to evolve with new features and improvements based on user feedback and industry needs.*
 
 ## 🎯 Why Choose Our LinkedIn Candidate Scraper?
 

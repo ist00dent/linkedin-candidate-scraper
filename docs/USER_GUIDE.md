@@ -247,6 +247,120 @@ LinkedIn Candidate Scraper is a powerful Chrome extension designed specifically 
 - Review the data before export
 - Check for any special characters or formatting
 
+### Enhanced Debugging with Comprehensive Logging (v1.1.0)
+
+#### Understanding the Logs
+The enhanced profile scraper now includes comprehensive logging that helps you understand exactly what's happening during data extraction:
+
+**Log Structure**:
+- **Timestamps**: Each log entry includes a precise timestamp
+- **Strategy Information**: Shows which extraction strategy is being used
+- **DOM Analysis**: Detailed information about page elements found
+- **Success/Failure Details**: Clear indication of what worked or failed
+- **Element Content**: Shows the actual content found in page elements
+
+#### Accessing Debug Information
+1. **Check Console**: Open browser developer tools (F12) and check the console
+2. **Review Response**: The scraper now includes logs in the JSON response
+3. **Background Script**: Check background script logs for processing details
+4. **Element Inspection**: Use browser inspector to verify page structure
+
+#### Common Log Messages
+
+**Successful Connection Extraction**:
+```
+[ProfileScraper] Strategy -2: Found target ul element
+[ProfileScraper] Strategy -2: Found li.text-body-small
+[ProfileScraper] Strategy -2: Found span with connections text: 67 connections
+[ProfileScraper] Strategy -2: Found connection in bold span: 67
+[ProfileScraper] Strategy -2: Connection count validated: 67
+```
+
+**Content Not Loaded**:
+```
+[ProfileScraper] Strategy -2: Connections not loaded yet, waiting...
+[ProfileScraper] No data found yet, continuing to poll...
+```
+
+**Element Not Found**:
+```
+[ProfileScraper] Strategy -2: Target ul element not found
+[ProfileScraper] Strategy -2: All ul elements on page: 15
+[ProfileScraper] Strategy -2: ul #1 classes: [class names] text: [content]
+```
+
+#### Using Logs for Troubleshooting
+
+**Step 1: Check if Target Element Exists**
+- Look for "Found target ul element" in logs
+- If not found, check "All ul elements on page" for alternatives
+
+**Step 2: Verify Content Loading**
+- Check if "Connections not loaded yet, waiting..." appears
+- Wait for content to load or refresh the page
+
+**Step 3: Review Extraction Strategies**
+- The scraper uses multiple strategies (Strategy -2, -1, 0, 0.5)
+- Check which strategies were attempted and their results
+
+**Step 4: Analyze DOM Structure**
+- Review "Target ul text content" and "Target ul innerHTML" logs
+- Verify the expected structure matches what's found
+
+#### Advanced Debugging Techniques
+
+**Manual Element Inspection**:
+1. Open browser developer tools (F12)
+2. Use element inspector to find the target ul element
+3. Check if it has the expected classes and content
+4. Verify the internal structure matches expectations
+
+**Console Testing**:
+```javascript
+// Test if target element exists
+document.querySelector('ul.SphwcEixfrGNowmlLIVCKpoTiOINwVPnRDM.RhVMdBYrxZODWmXAHqeyAggQBXKsGzdkxRvY')
+
+// Check for connections text
+document.querySelectorAll('*').forEach(el => {
+    if (el.textContent.includes('connections')) {
+        console.log('Found connections in:', el);
+    }
+});
+```
+
+**Network Analysis**:
+- Check if LinkedIn is loading content dynamically
+- Monitor network requests for AJAX calls
+- Verify page is fully loaded before scraping
+
+### Performance Optimization
+
+#### Connection Extraction Optimization
+- **Wait for Content**: The scraper now waits for connections to load
+- **Multiple Strategies**: Uses fallback strategies for robust extraction
+- **Smart Polling**: Continues checking until content is found or timeout
+- **Prioritized Extraction**: Focuses on connection data first
+
+#### Memory and Resource Management
+- **Efficient Logging**: Logs are collected efficiently without memory bloat
+- **Timeout Protection**: Prevents infinite waiting with 40-second timeout
+- **Resource Cleanup**: Proper cleanup of DOM queries and references
+- **Background Processing**: Continues working when popup is minimized
+
+### Data Quality Assurance
+
+#### Validation Features
+- **Connection Count Validation**: Ensures extracted numbers are reasonable (1-100,000)
+- **Content Verification**: Checks for expected text patterns
+- **Element Structure Validation**: Verifies DOM structure matches expectations
+- **Timestamp Tracking**: Records when each extraction attempt occurs
+
+#### Error Recovery
+- **Automatic Retries**: Multiple attempts with different strategies
+- **Graceful Degradation**: Continues with available data if some fails
+- **Detailed Error Reporting**: Comprehensive error information in logs
+- **Fallback Mechanisms**: Multiple extraction approaches for reliability
+
 ## 📈 Best Practices
 
 ### Efficient Scraping

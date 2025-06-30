@@ -2,7 +2,7 @@
 
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-brightgreen.svg)](https://chrome.google.com/webstore)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/ist00dent/linkedin-candidate-scraper/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/ist00dent/linkedin-candidate-scraper/releases)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
 > **The Ultimate LinkedIn Candidate Scraper Extension** - Extract, organize, and export candidate information from LinkedIn job applicant pages with professional Excel formatting. Perfect for recruiters, HR professionals, and talent acquisition teams.
@@ -17,6 +17,8 @@ LinkedIn Candidate Scraper is a powerful Chrome extension designed specifically 
 - 🔒 **Privacy-First**: All processing happens locally on your device
 - 🎯 **Recruitment-Focused**: Designed specifically for HR professionals
 - 📈 **Scalable**: Handle multiple candidates efficiently
+- 🔍 **Advanced Debugging**: Comprehensive logging for troubleshooting
+- 🎯 **Smart Extraction**: Prioritized connection and location data extraction
 
 ## 🚀 Quick Start Guide
 
@@ -41,6 +43,7 @@ LinkedIn Candidate Scraper is a powerful Chrome extension designed specifically 
 - **Personal Information**: Full name, professional title, current company
 - **Contact Details**: Phone numbers (cleaned and formatted)
 - **Location Data**: City, state, country information
+- **Connection Count**: LinkedIn connection numbers with smart extraction
 - **Education History**: Institution, degree, field of study, graduation dates
 - **Work Experience**: Company names, positions, duration (first entry)
 - **Timestamps**: Individual scraping timestamps for each candidate
@@ -54,6 +57,9 @@ LinkedIn Candidate Scraper is a powerful Chrome extension designed specifically 
 - **Desktop Notifications**: Get notified when scraping completes
 - **Error Recovery**: Robust error handling and retry mechanisms
 - **Privacy Protection**: No data sent to external servers
+- **Comprehensive Logging**: Detailed extraction logs with timestamps
+- **Smart Content Detection**: Waits for dynamic content to load
+- **Multiple Extraction Strategies**: Fallback methods for robust data collection
 
 ## 🎯 Perfect For
 
@@ -78,6 +84,7 @@ linkedin-candidate-scraper/
 │   │   ├── content.js            # Main scraping logic and data extraction
 │   │   ├── popup.js              # Popup functionality and UI interactions
 │   │   ├── background.js         # Background service worker
+│   │   ├── profileScraper.js     # Enhanced profile data extraction
 │   │   └── xlsx.full.min.js      # Excel export library
 │   ├── css/                      # Stylesheets (future use)
 │   ├── assets/                   # Static assets
@@ -85,6 +92,9 @@ linkedin-candidate-scraper/
 │   └── popup.html                # Extension popup interface
 ├── docs/                         # Documentation
 │   ├── CONTRIBUTING.md           # Contribution guidelines
+│   ├── FEATURES.md               # Detailed feature documentation
+│   ├── USER_GUIDE.md             # User guide and tutorials
+│   ├── FAQ.md                    # Frequently asked questions
 │   └── body.txt                  # Reference data
 ├── scripts/                      # Build and validation scripts
 ├── .github/                      # GitHub workflows and templates
@@ -116,6 +126,7 @@ linkedin-candidate-scraper/
 - **`src/js/content.js`**: Core scraping logic, data extraction, and parsing
 - **`src/js/popup.js`**: User interface, progress tracking, and Excel export
 - **`src/js/background.js`**: Background service worker for notifications
+- **`src/js/profileScraper.js`**: Enhanced profile data extraction with logging
 - **`src/popup.html`**: Extension popup interface and styling
 - **`manifest.json`**: Chrome extension configuration and permissions
 
@@ -198,77 +209,40 @@ We welcome contributions from the community! Whether you're a developer, recruit
 - **Testing**: Add tests and improve reliability
 - **UI/UX**: Enhance user interface and experience
 
-### Development Guidelines
-- Follow existing code style and conventions
-- Add comments for complex logic
-- Test on multiple LinkedIn page types
-- Update documentation for new features
-- Ensure backward compatibility
+## 📈 Recent Updates (v1.1.0)
 
-## 📄 License Information
+### Enhanced Profile Scraper
+- **Comprehensive Logging**: Detailed extraction logs with timestamps
+- **Connection Prioritization**: Scraper now prioritizes connection data extraction
+- **Smart Content Detection**: Waits for dynamic content to load before extraction
+- **Multiple Strategies**: Robust fallback system for data extraction
+- **Advanced Debugging**: Detailed DOM inspection and element analysis
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for complete details.
+### Technical Improvements
+- **Log Collection System**: Centralized logging with timestamp tracking
+- **JSON Response Enhancement**: Logs included in background script responses
+- **DOM Analysis**: Detailed inspection of page elements and structure
+- **Content Loading Detection**: Intelligent waiting for dynamic content
+- **Multiple Selector Strategies**: Robust fallback system for data extraction
 
-### MIT License Benefits
-- **Commercial Use**: Free for commercial applications
-- **Modification**: Modify and distribute freely
-- **Distribution**: Include in proprietary software
-- **Attribution**: Simple attribution requirement
-- **No Warranty**: Clear liability limitations
-
-## 🆘 Support & Resources
+## 📞 Support & Community
 
 ### Getting Help
-- **GitHub Issues**: Report bugs and request features
-- **Documentation**: Check the [docs](docs/) folder
-- **Contributing Guide**: See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
-- **Setup Guide**: Follow [SETUP.md](SETUP.md) for installation
+- **Documentation**: Check the comprehensive docs in the `/docs` folder
+- **Issues**: Report bugs and request features on GitHub
+- **Discussions**: Join community discussions for tips and tricks
 
-### Community Resources
-- **GitHub Discussions**: Ask questions and share ideas
-- **Wiki Pages**: Additional documentation and guides
-- **Release Notes**: Check [CHANGELOG.md](CHANGELOG.md) for updates
-- **Examples**: Sample usage and customization examples
-
-## 🔮 Future Roadmap
-
-### Planned Features
-- **Multi-Platform Support**: Firefox and Safari extensions
-- **Advanced Filtering**: Custom data filtering options
-- **Data Visualization**: Charts and analytics dashboard
-- **API Integration**: Connect with ATS and HR systems
-- **Custom Export Formats**: CSV, JSON, and other formats
-- **Batch Processing**: Handle multiple job postings simultaneously
-
-### Performance Improvements
-- **Faster Scraping**: Optimized data extraction algorithms
-- **Memory Optimization**: Reduced resource usage
-- **Error Recovery**: Enhanced error handling and recovery
-- **User Experience**: Improved UI/UX and accessibility
-
-### Enterprise Features
-- **Team Collaboration**: Shared candidate databases
-- **Advanced Analytics**: Recruitment metrics and insights
-- **Integration APIs**: Connect with existing HR tools
-- **Custom Branding**: White-label solutions
-
-## 📈 Why Choose LinkedIn Candidate Scraper?
-
-### Competitive Advantages
-- **Specialized for Recruitment**: Built specifically for HR professionals
-- **Privacy-First Design**: No data leaves your device
-- **Professional Export**: Clean, formatted Excel output
-- **Active Development**: Regular updates and improvements
-- **Open Source**: Transparent, auditable code
-- **Community Support**: Active community and documentation
-
-### Success Stories
-- **HR Teams**: Reduced candidate data collection time by 80%
-- **Recruitment Agencies**: Improved client reporting efficiency
-- **Corporate Recruiters**: Better organized candidate pipelines
-- **Talent Acquisition**: Streamlined hiring processes
+### Resources
+- **User Guide**: Detailed usage instructions in `docs/USER_GUIDE.md`
+- **FAQ**: Common questions answered in `docs/FAQ.md`
+- **Features**: Complete feature list in `docs/FEATURES.md`
+- **Contributing**: How to contribute in `docs/CONTRIBUTING.md`
 
 ---
+
+**Made with ❤️ for the recruitment community**
+
+*LinkedIn Candidate Scraper is designed to help recruitment professionals work more efficiently while maintaining ethical data collection practices.*
 
 ## 🎯 Keywords for SEO
 

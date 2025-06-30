@@ -47,6 +47,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             message: `Scraping completed! Found ${message.candidateCount} candidates. Excel file automatically downloaded. Click to reopen the extension.`
         });
     }
+    if (message.action === 'scrapeProfileLocationAndConnectionFromTab' && message.url) {
+        openProfileAndScrapeLocationAndConnection(message.url).then(data => {
+            sendResponse({ success: true, data });
+        }).catch(error => {
+            sendResponse({ success: false, error: error.message || error });
+        });
+        return true;
+    }
+    if (message.action === 'profileConnectionScraped' && sender.tab && sender.tab.id) {
+        console.log('[Background] Received connection from content script:', message.connection, 'from tab', sender.tab.id);
+        chrome.tabs.remove(sender.tab.id);
+        // Optionally, you can store or forward the result here
+        sendResponse({ success: true });
+    }
+    if (message.action === 'profileDataScraped' && sender.tab && sender.tab.id) {
+        console.log('[Background] Received profile data from content script:', message, 'from tab', sender.tab.id);
+        chrome.tabs.remove(sender.tab.id);
+        // Optionally, you can store or forward the result here
+        sendResponse({ success: true });
+    }
 });
 
 // Handle notification click to reopen popup
@@ -207,4 +227,46 @@ async function scrapeAllCandidatesWithDetailsAndPaginate() {
         await sleep(500);
         waited += 500;
     }
+}
+
+async function openProfileAndScrapeLocationAndConnection(url) {
+    return new Promise((resolve, reject) => {
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            console.log('[Background] Creating background tab for profile:', url);
+            chrome.tabs.create({ url, active: false }, async (tab) => {
+                if (!tab || !tab.id) {
+                    console.error('[Background] Failed to open tab');
+                    return reject('Failed to open tab');
+                }
+                const tabId = tab.id;
+                // Listen for the result from the content script
+                function onMessage(message, sender, sendResponse) {
+                    if (message.action === 'profileConnectionScraped' && sender.tab && sender.tab.id === tabId) {
+                        console.log('[Background] [Promise] Received connection from content script:', message.connection, 'from tab', sender.tab.id);
+                        chrome.tabs.remove(tabId);
+                        resolve({ connection: message.connection });
+                        chrome.runtime.onMessage.removeListener(onMessage);
+                        sendResponse({ success: true });
+                    }
+                    if (message.action === 'profileDataScraped' && sender.tab && sender.tab.id === tabId) {
+                        console.log('[Background] [Promise] Received profile data from content script:', message, 'from tab', sender.tab.id);
+                        chrome.tabs.remove(tabId);
+                        resolve({ 
+                            connection: message.connection || '', 
+                            location: message.location || '' 
+                        });
+                        chrome.runtime.onMessage.removeListener(onMessage);
+                        sendResponse({ success: true });
+                    }
+                }
+                chrome.runtime.onMessage.addListener(onMessage);
+                // Timeout after 45s
+                setTimeout(() => {
+                    chrome.runtime.onMessage.removeListener(onMessage);
+                    chrome.tabs.remove(tabId);
+                    reject('Timeout waiting for content script result');
+                }, 45000);
+            });
+        });
+    });
 } 
